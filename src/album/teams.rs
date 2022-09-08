@@ -34,12 +34,12 @@ impl FromStr for Team {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "FWC" => Ok(Self::FWC),
-            "QAT" => Ok(Self::QAT),
-            "ECU" => Ok(Self::ECU),
-            "SEN" => Ok(Self::SEN),
-            "NED" => Ok(Self::NED),
-            "BRA" => Ok(Self::BRA),
+            "FWC" | "fwc" => Ok(Self::FWC),
+            "QAT" | "qat" => Ok(Self::QAT),
+            "ECU" | "ecu" => Ok(Self::ECU),
+            "SEN" | "sen" => Ok(Self::SEN),
+            "NED" | "ned" => Ok(Self::NED),
+            "BRA" | "bra" => Ok(Self::BRA),
             _ => Err(())
         }
     }

@@ -11,6 +11,7 @@ mod album;
 enum Commands {
     Collect,
     Trade,
+    Show,
     Default,
 }
 
@@ -19,38 +20,44 @@ impl FromStr for Commands {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "trade" => Ok(Self::Trade),
-            "collect" => Ok(Self::Collect),
+            "trade"   | "trocar"  => Ok(Self::Trade),
+            "collect" | "coletar" => Ok(Self::Collect),
+            "show"    | "mostrar" => Ok(Self::Show),
             _ => Ok(Self::Default),
         }
     }
-}
-
-pub trait Command {
-    fn execute(&self, album: &mut Album);
 }
 
 pub struct Cli {}
 
 impl Cli {
     pub fn parse(args: &mut Args) -> Box<dyn Command + 'static> {
-        println!("{:?}", args);
         let command = Commands::from_str(&args.nth(1).unwrap()).unwrap();
-        let team = Team::from_str(&args.nth(0).unwrap()).unwrap();
-        let ids: Vec<String> = args.collect();
-        println!("{:?}", command);
         match command {
-            Commands::Collect => Box::new(Collect {
-                team: team,
-                player_ids: ids,
-            }),
-            Commands::Trade => Box::new(Trade {
-                team: team,
-                player_ids: ids,
-            }),
+            Commands::Collect => {
+                let team = Team::from_str(&args.nth(0).unwrap()).unwrap();
+                let ids: Vec<String> = args.collect();
+                Box::new(Collect {
+                    team: team,
+                    player_ids: ids,
+                })
+            }
+            Commands::Trade => {
+                let team = Team::from_str(&args.nth(0).unwrap()).unwrap();
+                let ids: Vec<String> = args.collect();
+                Box::new(Trade {
+                    team: team,
+                    player_ids: ids,
+                })
+            }
+            Commands::Show => Box::new(Show {}),
             Commands::Default => Box::new(Default {}),
         }
     }
+}
+
+pub trait Command {
+    fn execute(&self, album: &mut Album);
 }
 
 pub struct Trade {
@@ -60,7 +67,6 @@ pub struct Trade {
 
 impl Command for Trade {
     fn execute(&self, album: &mut Album) {
-        let x = &self.player_ids[1..];
         for id in &self.player_ids {
             album.trade(self.team, id)
         }
@@ -85,5 +91,13 @@ pub struct Default {}
 impl Command for Default {
     fn execute(&self, _album: &mut Album) {
         println!("Comando não conhecido!")
+    }
+}
+
+pub struct Show {}
+
+impl Command for Show {
+    fn execute(&self, album: &mut Album) {
+        println!("{}", album);
     }
 }

@@ -1,6 +1,3 @@
-use commands::Command;
-use teams::Team;
-
 #[path = "./album/album.rs"]
 mod album;
 
@@ -13,7 +10,6 @@ mod commands;
 mod sticker;
 fn main() {
     let command = commands::Cli::parse(&mut std::env::args());
-    let mut a = album::Album::new();
-    command.execute(&mut a);
-    println!("{}", a)
+    let mut album = album::Album::new();
+    command.execute(&mut album);
 }
