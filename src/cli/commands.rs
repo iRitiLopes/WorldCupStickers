@@ -2,7 +2,7 @@ use std::env::Args;
 use std::str::FromStr;
 
 use crate::album::Album;
-use crate::teams::{NationalTeam, Team};
+use crate::teams::{Team};
 
 #[path = "../album/album.rs"]
 mod album;
