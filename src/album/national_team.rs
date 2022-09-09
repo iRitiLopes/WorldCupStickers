@@ -1,11 +1,6 @@
-use crate::team::Team;
 use crate::sticker::Sticker;
-use std::{collections::HashMap, hash::Hash, str::FromStr, vec};
-
-use strum::IntoEnumIterator; // 0.17.1
-use strum_macros::EnumIter; // 0.17.1
-
-
+use crate::team::Team;
+use std::{collections::HashMap, vec};
 
 pub struct NationalTeam<'a> {
     team: Team,
@@ -14,11 +9,11 @@ pub struct NationalTeam<'a> {
 
 impl std::fmt::Display for NationalTeam<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
-        write!(f, "{}\n", self.team);
-        for (s_id, s) in &self.stickers {
-            write!(f, "\t- {}\n", s);
+        let mut message = format!("{}\n", self.team).to_owned();
+        for (_sticker_id, sticker) in &self.stickers {
+            message.push_str(&format!("\t- {}\n", sticker));
         }
-        write!(f, "")
+        write!(f, "{}", message)
     }
 }
 
@@ -118,6 +113,36 @@ impl NationalTeam<'_> {
             Sticker::new("1", "Team"),
         ];
         NationalTeam::new(Team::ENG, stk)
+    }
+
+    pub fn usa() -> NationalTeam<'static> {
+        let stk = vec![
+            Sticker::new("1", "Team"),
+            Sticker::new("2", "Shield"),
+            Sticker::new("3", "Pickford"),
+            Sticker::new("1", "Team"),
+        ];
+        NationalTeam::new(Team::USA, stk)
+    }
+
+    pub fn iran() -> NationalTeam<'static> {
+        let stk = vec![
+            Sticker::new("1", "Team"),
+            Sticker::new("2", "Shield"),
+            Sticker::new("3", "Pickford"),
+            Sticker::new("1", "Team"),
+        ];
+        NationalTeam::new(Team::IRN, stk)
+    }
+
+    pub fn wales() -> NationalTeam<'static> {
+        let stk = vec![
+            Sticker::new("1", "Team"),
+            Sticker::new("2", "Shield"),
+            Sticker::new("3", "Pickford"),
+            Sticker::new("1", "Team"),
+        ];
+        NationalTeam::new(Team::WAL, stk)
     }
 
     pub fn collect<'a>(&mut self, id: &'a str) {

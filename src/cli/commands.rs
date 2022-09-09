@@ -51,8 +51,14 @@ impl Cli {
                 })
             }
             Commands::Show => {
-                let team = Team::from_str(&args.nth(0).unwrap());
-                Box::new(Show { team: team })
+                let arg = &args.nth(0);
+                match arg {
+                    Some(team_arg) => {
+                        let team = Team::from_str(team_arg);
+                        Box::new(Show { team: team })
+                    }
+                    None => Box::new(Show { team: Err(()) }),
+                }
             }
             Commands::Default => Box::new(Default {}),
         }
@@ -103,15 +109,15 @@ pub struct Show {
 
 impl Command for Show {
     fn execute(&self, album: &mut Album) {
-        match  self.team {
+        match self.team {
             Ok(team) => {
                 let n_team = album.get_national_team(team);
                 match n_team {
                     Ok(n) => println!("{}", n),
                     Err(_) => println!("{}", album),
                 }
-            },
-            Err(_) => println!("{}", album)
+            }
+            Err(_) => println!("{}", album),
         }
     }
 }

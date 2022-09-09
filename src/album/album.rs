@@ -13,6 +13,10 @@ impl<'a> Album<'_> {
                 NationalTeam::ecuador(),
                 NationalTeam::senegal(),
                 NationalTeam::netherlands(),
+                NationalTeam::england(),
+                NationalTeam::usa(),
+                NationalTeam::iran(),
+                NationalTeam::wales(),
                 NationalTeam::brazil(),
             ],
         }
@@ -36,7 +40,7 @@ impl<'a> Album<'_> {
 
     pub fn get_national_team(&self, team: Team) -> Result<&NationalTeam, ()> {
         for t in &self.teams {
-            if(t.is(&team)){
+            if t.is(&team) {
                 return Ok(t)
             }
         }
@@ -46,9 +50,10 @@ impl<'a> Album<'_> {
 
 impl std::fmt::Display for Album<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
+        let mut message = "".to_owned();
         for n in &self.teams {
-            write!(f, "{}\n", n);
+            message.push_str(&format!("{}\n", n));
         }
-        write!(f, "")
+        write!(f, "{}", message)
     }
 }
