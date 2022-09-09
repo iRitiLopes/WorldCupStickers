@@ -1,4 +1,5 @@
-use crate::teams::{NationalTeam, Team};
+use crate::national_team::{NationalTeam};
+use crate::team::Team;
 
 pub struct Album<'a> {
     teams: Vec<NationalTeam<'a>>,
@@ -31,6 +32,15 @@ impl<'a> Album<'_> {
                 t.trade(id);
             }
         }
+    }
+
+    pub fn get_national_team(&self, team: Team) -> Result<&NationalTeam, ()> {
+        for t in &self.teams {
+            if(t.is(&team)){
+                return Ok(t)
+            }
+        }
+        Err(())
     }
 }
 

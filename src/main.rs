@@ -1,11 +1,14 @@
 #[path = "./album/album.rs"]
 mod album;
 
-#[path = "./album/teams.rs"]
-mod teams;
+#[path = "./album/national_team.rs"]
+mod national_team;
 
 #[path = "./cli/commands.rs"]
 mod commands;
+
+#[path = "./album/team.rs"]
+mod team;
 
 mod sticker;
 fn main() {

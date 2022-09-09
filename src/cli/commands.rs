@@ -2,7 +2,7 @@ use std::env::Args;
 use std::str::FromStr;
 
 use crate::album::Album;
-use crate::teams::{Team};
+use crate::team::Team;
 
 #[path = "../album/album.rs"]
 mod album;
@@ -20,9 +20,9 @@ impl FromStr for Commands {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "trade"   | "trocar"  => Ok(Self::Trade),
+            "trade" | "trocar" => Ok(Self::Trade),
             "collect" | "coletar" => Ok(Self::Collect),
-            "show"    | "mostrar" => Ok(Self::Show),
+            "show" | "mostrar" => Ok(Self::Show),
             _ => Ok(Self::Default),
         }
     }
@@ -50,7 +50,10 @@ impl Cli {
                     player_ids: ids,
                 })
             }
-            Commands::Show => Box::new(Show {}),
+            Commands::Show => {
+                let team = Team::from_str(&args.nth(0).unwrap());
+                Box::new(Show { team: team })
+            }
             Commands::Default => Box::new(Default {}),
         }
     }
@@ -94,10 +97,21 @@ impl Command for Default {
     }
 }
 
-pub struct Show {}
+pub struct Show {
+    pub team: Result<Team, ()>,
+}
 
 impl Command for Show {
     fn execute(&self, album: &mut Album) {
-        println!("{}", album);
+        match  self.team {
+            Ok(team) => {
+                let n_team = album.get_national_team(team);
+                match n_team {
+                    Ok(n) => println!("{}", n),
+                    Err(_) => println!("{}", album),
+                }
+            },
+            Err(_) => println!("{}", album)
+        }
     }
 }
