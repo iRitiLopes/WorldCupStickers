@@ -1,5 +1,11 @@
-use crate::national_team::{NationalTeam};
-use crate::team::Team;
+pub mod team;
+use team::Team;
+
+mod national_team;
+use national_team::NationalTeam;
+
+mod sticker;
+
 
 pub struct Album<'a> {
     teams: Vec<NationalTeam<'a>>,
