@@ -1,9 +1,9 @@
-use core::str::FromStr;
+use crate::album::team::Team;
+use crate::cli::commands::Collect;
 use crate::cli::commands::Default;
 use crate::cli::commands::Show;
 use crate::cli::commands::Trade;
-use crate::cli::commands::Collect;
-use crate::album::team::Team;
+use core::str::FromStr;
 use std::env::Args;
 mod commands;
 use commands::Command;
@@ -13,6 +13,7 @@ enum Commands {
     Collect,
     Trade,
     Show,
+    Export,
     Default,
 }
 
@@ -24,6 +25,7 @@ impl FromStr for Commands {
             "trade" | "trocar" => Ok(Self::Trade),
             "collect" | "coletar" => Ok(Self::Collect),
             "show" | "mostrar" => Ok(Self::Show),
+            "export" | "exportar" => Ok(Self::Export),
             _ => Ok(Self::Default),
         }
     }
@@ -60,6 +62,7 @@ impl Cli {
                     None => Box::new(Show { team: Err(()) }),
                 }
             }
+            Commands::Export => Box::new(Default {}),
             Commands::Default => Box::new(Default {}),
         }
     }

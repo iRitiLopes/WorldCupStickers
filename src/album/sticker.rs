@@ -1,4 +1,6 @@
+use serde::{Serialize, Deserialize};
 #[derive(Clone, Copy)]
+#[derive(Serialize, Deserialize)]
 pub struct Sticker<'a> {
     pub id: &'a str,
     name: &'a str,

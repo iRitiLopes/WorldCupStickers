@@ -1,9 +1,11 @@
 use core::hash::Hash;
 use core::str::FromStr;
 
+use serde::{Deserialize, Serialize};
 use strum_macros::EnumIter;
 
 #[derive(Debug, EnumIter)]
+#[derive(Serialize, Deserialize)]
 pub enum Team {
     FWC,
     QAT,

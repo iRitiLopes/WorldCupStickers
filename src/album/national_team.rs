@@ -2,11 +2,16 @@
 
 use std::{collections::HashMap, vec};
 
+use serde::{Deserialize, Serialize};
+
 use super::team::Team;
 use super::sticker::Sticker;
 
+#[derive(Serialize, Deserialize)]
 pub struct NationalTeam<'a> {
     team: Team,
+
+    #[serde(borrow)]
     stickers: HashMap<&'a str, Sticker<'a>>,
 }
 
