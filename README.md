@@ -15,6 +15,7 @@ add to path:
 
 ## Examples
 
+### Show
 ```stickers show bra``` 
 show all the stickers from BRAZIL
 
@@ -83,11 +84,15 @@ show all the REPEATED stickers from BRAZIL
 ```
 
 
+### Collect
+
 ```bash
 stickers collect BRA 1 2 3 4 5 6 7 8 9 10 10 10 1 1 1
 ``` 
 collect all these stickers from BRAZIL: 1 2 3 4 5 6 7 8 9 10 10 10 1 1 1
 
+
+### Trade
 ```
 stickers trade BRA 1 2 3 4 5 6 7 8 9 10 10 10 1 1 1
 ``` 
