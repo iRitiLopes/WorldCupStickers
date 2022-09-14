@@ -165,4 +165,15 @@ impl NationalTeam<'_> {
         *self.stickers.get_mut(id).unwrap() = sticker;
         return res;
     }
+
+    pub fn show(&self, missing: bool, repeated: bool) {
+        let mut message = format!("{}\n", self.team).to_owned();
+        for (_sticker_id, sticker) in &self.stickers {
+            if (missing && sticker.is_missing()) || (repeated && sticker.have_repeated()) || (!missing && !repeated){
+                message.push_str(&format!("\t- {}\n", sticker));
+            }
+                
+        }
+        println!("{}", message);
+    }
 }

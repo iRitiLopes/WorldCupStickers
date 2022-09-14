@@ -54,12 +54,39 @@ impl Cli {
             }
             Commands::Show => {
                 let arg = &args.nth(0);
+                let mut missing = false;
+                let mut repeated = false;
+
+                match args.nth(0) {
+                    Some(option) => {
+                        if option.eq(&String::from("--missing")) {
+                            missing = true;
+                        } else if option.eq(&String::from("--repeated")) {
+                            repeated = true;
+                        } else {
+                            missing = false;
+                            repeated = false;
+                        }
+                    }
+                    None => {
+                        missing = false;
+                        repeated = false;
+                    }
+                };
                 match arg {
                     Some(team_arg) => {
                         let team = Team::from_str(team_arg);
-                        Box::new(Show { team: team })
+                        Box::new(Show {
+                            team: team,
+                            missing: missing,
+                            repeated: repeated,
+                        })
                     }
-                    None => Box::new(Show { team: Err(()) }),
+                    None => Box::new(Show {
+                        team: Err(()),
+                        missing: missing,
+                        repeated: repeated,
+                    }),
                 }
             }
             Commands::Export => Box::new(Default {}),

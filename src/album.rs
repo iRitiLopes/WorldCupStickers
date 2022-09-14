@@ -1,5 +1,8 @@
 pub mod team;
-use std::{fs::{self}, error::Error};
+use std::{
+    error::Error,
+    fs::{self},
+};
 
 use serde::{Deserialize, Serialize};
 use team::Team;
@@ -65,7 +68,6 @@ impl<'a> Album<'_> {
     }
 
     pub fn load(data: &'a str) -> Result<Album<'a>, Box<dyn Error>> {
-
         // Read the JSON contents of the file as an instance of `User`.
         let u: Album = serde_json::from_str(&data)?;
 
@@ -76,6 +78,12 @@ impl<'a> Album<'_> {
     pub fn path() -> String {
         let dir = dirs::home_dir().expect("a");
         format!("{}/.stickers.json", dir.to_str().unwrap()).to_owned()
+    }
+
+    pub fn show(&self, missing: bool, repeated: bool) {
+        for n in &self.teams {
+            n.show(missing, repeated)
+        }
     }
 }
 

@@ -45,6 +45,10 @@ impl Sticker<'_> {
         self.quantity > 1
     }
 
+    pub fn is_missing(&self) -> bool{
+        self.quantity == 0
+    }
+
     pub fn trade(&mut self) -> bool {
         if self.have_repeated() {
             self.quantity -= 1;

@@ -3,13 +3,13 @@ mod cli;
 fn main() {
     let command = cli::Cli::parse(&mut std::env::args());
     let stored_album = std::fs::read_to_string(album::Album::path());
+    let data: String;
     let mut album: album::Album;
     if stored_album.is_err() {
         album = album::Album::new();
-        command.execute(&mut album);
     } else {
-        let data = stored_album.ok().unwrap();
+        data = stored_album.ok().unwrap();
         album = album::Album::load(&data).ok().unwrap();
-        command.execute(&mut album);
     }
+    command.execute(&mut album)
 }
