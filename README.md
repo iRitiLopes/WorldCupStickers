@@ -12,7 +12,8 @@ add to path:
 
 ```echo "export PATH=./target/release:\${PATH}" >> ~/.zshrc```
 
-and use
+
+## Examples
 
 ```stickers show bra``` 
 show all the stickers from BRAZIL
