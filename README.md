@@ -37,7 +37,7 @@ Team(BRA)
                 collected: false, 
                 repeated: false, 
                 quantity: 0
-        - id: 15, name: Eder Antony 
+        - id: 15, name: Antony 
                 collected: false, 
                 repeated: false, 
                 quantity: 0
