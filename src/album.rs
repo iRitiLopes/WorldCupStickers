@@ -1,5 +1,6 @@
 pub mod team;
 use std::{
+    borrow::BorrowMut,
     error::Error,
     fs::{self},
 };
@@ -54,24 +55,24 @@ impl<'a> Album<'_> {
                 NationalTeam::ghana(),
                 NationalTeam::uruguay(),
                 NationalTeam::korea(),
-                NationalTeam::fwc()
+                NationalTeam::fwc(),
             ],
         }
     }
 
     pub fn collect(&mut self, team: Team, id: &'a str) {
-        for t in &mut self.teams {
-            if t.is(&team) {
-                t.collect(id)
+        for national_team in &mut self.teams {
+            if national_team.is(&team) {
+                national_team.collect(id)
             }
         }
         self.store();
     }
 
     pub fn trade(&mut self, team: Team, id: &'a str) {
-        for t in &mut self.teams {
-            if t.is(&team) {
-                t.trade(id);
+        for national_team in &mut self.teams {
+            if national_team.is(&team) {
+                national_team.trade(id);
             }
         }
         self.store()
@@ -92,30 +93,45 @@ impl<'a> Album<'_> {
     }
 
     pub fn load(data: &'a str) -> Result<Album<'a>, Box<dyn Error>> {
-        // Read the JSON contents of the file as an instance of `User`.
-        let u: Album = serde_json::from_str(&data)?;
-
-        // Return the `User`.
-        Ok(u)
+        let album: Album = serde_json::from_str(&data)?;
+        Ok(album)
     }
 
     pub fn path() -> String {
-        let dir = dirs::home_dir().expect("a");
+        let dir = dirs::home_dir().expect("Not have home dir mapped");
         format!("{}/.stickers.json", dir.to_str().unwrap()).to_owned()
     }
 
     pub fn show(&self, missing: bool, repeated: bool) {
-        for n in &self.teams {
-            n.show(missing, repeated)
+        for national_team in &self.teams {
+            national_team.show(missing, repeated)
         }
+    }
+
+    pub fn clean(&mut self, team: Result<Team, ()>, repeated: bool) {
+        match team {
+            Ok(t) => {
+                for national_team in self.teams.iter_mut() {
+                    if national_team.is(&t) {
+                        national_team.clean(repeated)
+                    }
+                }
+            }
+            Err(_) => {
+                for national_team in self.teams.iter_mut() {
+                    national_team.clean(repeated)
+                }
+            }
+        }
+        self.store();
     }
 }
 
 impl std::fmt::Display for Album<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
         let mut message = "".to_owned();
-        for n in &self.teams {
-            message.push_str(&format!("{}\n", n));
+        for national_team in &self.teams {
+            message.push_str(&format!("{}\n", national_team));
         }
         write!(f, "{}", message)
     }

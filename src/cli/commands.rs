@@ -42,7 +42,7 @@ impl Command for Default {
 pub struct Show {
     pub team: Result<Team, ()>,
     pub missing: bool,
-    pub repeated: bool
+    pub repeated: bool,
 }
 
 impl Command for Show {
@@ -52,10 +52,21 @@ impl Command for Show {
                 let n_team = album.get_national_team(team);
                 match n_team {
                     Ok(n) => n.show(self.missing, self.repeated),
-                    Err(_) => album.show(self.missing, self.repeated)
+                    Err(_) => album.show(self.missing, self.repeated),
                 }
             }
             Err(_) => album.show(self.missing, self.repeated),
         }
+    }
+}
+
+pub struct Clean {
+    pub team: Result<Team, ()>,
+    pub repeated: bool,
+}
+
+impl Command for Clean {
+    fn execute(&self, album: &mut Album) {
+        album.clean(self.team, self.repeated);
     }
 }

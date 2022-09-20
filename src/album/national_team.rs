@@ -940,4 +940,12 @@ impl NationalTeam<'_> {
         }
         println!("{}", message);
     }
+
+    pub fn clean(&mut self, repeated: bool) {
+        for k in self.stickers.iter_mut(){
+            if k.1.have_repeated() && repeated {
+                k.1.clean();
+            }
+        }
+    }
 }

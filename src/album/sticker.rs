@@ -5,7 +5,7 @@ pub struct Sticker<'a> {
     pub id: &'a str,
     name: &'a str,
     collected: bool,
-    quantity: u32,
+    pub quantity: u32,
 }
 
 impl std::fmt::Display for Sticker<'_> {
@@ -56,6 +56,10 @@ impl Sticker<'_> {
         }
         println!("Não foi possível trocar esta figurinha pois você não tem repetida: {} {}", self.id, self.name);
         return false
+    }
+
+    pub fn clean(&mut self) {
+        self.quantity = 1
     }
 }
 

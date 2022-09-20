@@ -3,6 +3,7 @@ use crate::cli::commands::Collect;
 use crate::cli::commands::Default;
 use crate::cli::commands::Show;
 use crate::cli::commands::Trade;
+use crate::cli::commands::Clean;
 use core::str::FromStr;
 use std::env::Args;
 mod commands;
@@ -14,6 +15,7 @@ enum Commands {
     Trade,
     Show,
     Export,
+    Clean,
     Default,
 }
 
@@ -26,6 +28,7 @@ impl FromStr for Commands {
             "collect" | "coletar" => Ok(Self::Collect),
             "show" | "mostrar" => Ok(Self::Show),
             "export" | "exportar" => Ok(Self::Export),
+            "clean" => Ok(Self::Clean),
             _ => Ok(Self::Default),
         }
     }
@@ -88,7 +91,23 @@ impl Cli {
                         repeated: repeated,
                     }),
                 }
-            }
+            },
+            Commands::Clean => {
+                let arg = &args.nth(0);
+                match arg {
+                    Some(team_arg) => {
+                        let team = Team::from_str(team_arg);
+                        Box::new(Clean {
+                            team: team,
+                            repeated: true,
+                        })
+                    }
+                    None => Box::new(Clean {
+                        team: Err(()),
+                        repeated: true,
+                    }),
+                }
+            },
             Commands::Export => Box::new(Default {}),
             Commands::Default => Box::new(Default {}),
         }
