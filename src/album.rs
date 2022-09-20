@@ -128,6 +128,7 @@ impl<'a> Album<'_> {
         for national_team in self.teams.iter_mut() {
             national_team.clean(repeated)
         }
+        self.store()
     }
 }
 

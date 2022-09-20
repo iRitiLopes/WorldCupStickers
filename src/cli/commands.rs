@@ -68,6 +68,14 @@ pub struct Clean {
 
 impl Command for Clean {
     fn execute(&self, album: &mut Album) {
+        if !self.all && self.team.is_err() {
+            println!(
+                "Invalid args. Example: \n
+                stickers clean BRA\n
+                stickers clean all <to clear all national teams repeateds stickers"
+            );
+            return;
+        }
         if self.all {
             album.clean_all(self.repeated);
             return;

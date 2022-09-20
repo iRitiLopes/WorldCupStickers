@@ -96,6 +96,13 @@ impl Cli {
                 let arg = &args.nth(0);
                 match arg {
                     Some(team_arg) => {
+                        if String::from("all").eq(team_arg) {
+                            return Box::new(Clean {
+                                team: Err(()),
+                                repeated: true,
+                                all: true
+                            })
+                        }
                         let team = Team::from_str(team_arg);
                         Box::new(Clean {
                             team: team,
