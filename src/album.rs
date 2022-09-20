@@ -1,6 +1,5 @@
 pub mod team;
 use std::{
-    borrow::BorrowMut,
     error::Error,
     fs::{self},
 };
@@ -118,12 +117,17 @@ impl<'a> Album<'_> {
                 }
             }
             Err(_) => {
-                for national_team in self.teams.iter_mut() {
-                    national_team.clean(repeated)
-                }
+                println!("Not found this National Team");
+                return
             }
         }
         self.store();
+    }
+
+    pub fn clean_all(&mut self, repeated: bool) {
+        for national_team in self.teams.iter_mut() {
+            national_team.clean(repeated)
+        }
     }
 }
 

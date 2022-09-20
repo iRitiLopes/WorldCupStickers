@@ -63,10 +63,15 @@ impl Command for Show {
 pub struct Clean {
     pub team: Result<Team, ()>,
     pub repeated: bool,
+    pub all: bool,
 }
 
 impl Command for Clean {
     fn execute(&self, album: &mut Album) {
+        if self.all {
+            album.clean_all(self.repeated);
+            return;
+        }
         album.clean(self.team, self.repeated);
     }
 }

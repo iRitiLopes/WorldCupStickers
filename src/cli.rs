@@ -100,11 +100,13 @@ impl Cli {
                         Box::new(Clean {
                             team: team,
                             repeated: true,
+                            all: false
                         })
                     }
                     None => Box::new(Clean {
                         team: Err(()),
                         repeated: true,
+                        all: false
                     }),
                 }
             },
