@@ -146,7 +146,7 @@ impl<'a> Album<'_> {
         }
         for i in 1..33 {
             if (i % 4) == 1 {
-                print!("\nGROUP: {}\n", i / 4)
+                print!("\nGROUP: {}\n", (i / 4) + 1)
             }
             match self.teams.get(i) {
                 Some(n) => print!("{}\t", n.team),
