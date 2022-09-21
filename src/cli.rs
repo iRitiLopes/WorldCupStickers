@@ -1,124 +1,128 @@
 use crate::album::team::Team;
-use crate::cli::commands::Collect;
-use crate::cli::commands::Default;
-use crate::cli::commands::Show;
-use crate::cli::commands::Trade;
 use crate::cli::commands::Clean;
+use crate::cli::commands::Collect;
+
+use crate::cli::commands::Trade;
 use core::str::FromStr;
-use std::env::Args;
+
 mod commands;
+use crate::album::Album;
+use clap::{Parser, Subcommand};
 use commands::Command;
 
-#[derive(Debug, PartialEq)]
-enum Commands {
-    Collect,
-    Trade,
-    Show,
-    Export,
-    Clean,
-    Default,
-}
+use self::commands::Nations;
 
-impl FromStr for Commands {
-    type Err = ();
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "trade" | "trocar" => Ok(Self::Trade),
-            "collect" | "coletar" => Ok(Self::Collect),
-            "show" | "mostrar" => Ok(Self::Show),
-            "export" | "exportar" => Ok(Self::Export),
-            "clean" => Ok(Self::Clean),
-            _ => Ok(Self::Default),
-        }
-    }
+#[derive(Parser)]
+#[clap(author, version, about, long_about = None)]
+#[clap(propagate_version = true)]
+pub struct Cli {
+    #[clap(subcommand)]
+    command: Commands,
 }
-pub struct Cli {}
 
 impl Cli {
-    pub fn parse(args: &mut Args) -> Box<dyn Command + 'static> {
-        let command = Commands::from_str(&args.nth(1).unwrap()).unwrap();
-        match command {
-            Commands::Collect => {
-                let team = Team::from_str(&args.nth(0).unwrap()).unwrap();
-                let ids: Vec<String> = args.collect();
-                Box::new(Collect {
-                    team: team,
-                    player_ids: ids,
-                })
-            }
-            Commands::Trade => {
-                let team = Team::from_str(&args.nth(0).unwrap()).unwrap();
-                let ids: Vec<String> = args.collect();
-                Box::new(Trade {
-                    team: team,
-                    player_ids: ids,
-                })
-            }
-            Commands::Show => {
-                let arg = &args.nth(0);
-                let mut missing = false;
-                let mut repeated = false;
-
-                match args.nth(0) {
-                    Some(option) => {
-                        if option.eq(&String::from("--missing")) {
-                            missing = true;
-                        } else if option.eq(&String::from("--repeated")) {
-                            repeated = true;
-                        } else {
-                            missing = false;
-                            repeated = false;
-                        }
+    pub fn execute(album: &mut Album) {
+        let cli = Cli::parse();
+        match &cli.command {
+            Commands::Show {
+                national_team,
+                repeated,
+                missing,
+            } => match national_team {
+                Some(nation) => {
+                    let n = Team::from_str(nation);
+                    match n {
+                        Ok(n_team) => album.show_team(n_team, *missing, *repeated),
+                        Err(_) => album.show(*missing, *repeated),
                     }
-                    None => {
-                        missing = false;
-                        repeated = false;
-                    }
-                };
-                match arg {
-                    Some(team_arg) => {
-                        let team = Team::from_str(team_arg);
-                        Box::new(Show {
-                            team: team,
-                            missing: missing,
-                            repeated: repeated,
-                        })
-                    }
-                    None => Box::new(Show {
-                        team: Err(()),
-                        missing: missing,
-                        repeated: repeated,
-                    }),
                 }
+                None => album.show(*missing, *repeated),
             },
-            Commands::Clean => {
-                let arg = &args.nth(0);
-                match arg {
-                    Some(team_arg) => {
-                        if String::from("all").eq(team_arg) {
-                            return Box::new(Clean {
-                                team: Err(()),
-                                repeated: true,
-                                all: true
-                            })
-                        }
-                        let team = Team::from_str(team_arg);
-                        Box::new(Clean {
-                            team: team,
-                            repeated: true,
-                            all: false
-                        })
-                    }
-                    None => Box::new(Clean {
+            Commands::Collect { national_team, ids } => {
+                let n = Team::from_str(&national_team).unwrap();
+                let c = Collect {
+                    team: n,
+                    player_ids: ids.to_vec(),
+                };
+                c.execute(album);
+            }
+            Commands::Trade { national_team, ids } => {
+                let n = Team::from_str(&national_team).unwrap();
+                let t = Trade {
+                    team: n,
+                    player_ids: ids.to_vec(),
+                };
+                t.execute(album);
+            }
+            Commands::Clean { national_team, all } => match national_team {
+                Some(nation) => {
+                    let n = Team::from_str(nation);
+                    let c = Clean {
+                        team: n,
+                        repeated: true,
+                        all: *all,
+                    };
+                    c.execute(album);
+                }
+                None => {
+                    let c = Clean {
                         team: Err(()),
                         repeated: true,
-                        all: false
-                    }),
+                        all: *all,
+                    };
+                    c.execute(album)
                 }
             },
-            Commands::Export => Box::new(Default {}),
-            Commands::Default => Box::new(Default {}),
+            Commands::Nations {} => {
+                let n = Nations {};
+                n.execute(album)
+            }
         }
     }
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Show stickers
+    Show {
+        #[clap(short, long, action)]
+        national_team: Option<String>,
+
+        #[clap(short, long, action, default_value_t = false)]
+        repeated: bool,
+
+        #[clap(short, long, action, default_value_t = false)]
+        missing: bool,
+    },
+
+    /// Collect Stickers
+    Collect {
+        #[clap(short, long, action)]
+        national_team: String,
+
+        #[clap(short, long, action, value_parser, use_value_delimiter = true, value_delimiter=',')]
+        ids: Vec<String>,
+    },
+
+    /// Trade Stickers
+    Trade {
+        #[clap(short, long, action)]
+        national_team: String,
+
+        #[clap(short, long, action, value_parser, use_value_delimiter = true, value_delimiter=',')]
+        ids: Vec<String>,
+    },
+
+    /// Clean Stickers
+    Clean {
+        /// Obrigatory if all is false
+        #[clap(short, long, action)]
+        national_team: Option<String>,
+
+        ///Clean all the repeated for all nations
+        #[clap(short, long, action, default_value_t = false)]
+        all: bool,
+    },
+
+    Nations {},
 }

@@ -1,7 +1,7 @@
 mod album;
 mod cli;
 fn main() {
-    let command = cli::Cli::parse(&mut std::env::args());
+    //let command = cli::Cli::parse(&mut std::env::args());
     let stored_album = std::fs::read_to_string(album::Album::path());
     let data: String;
     let mut album: album::Album;
@@ -11,5 +11,6 @@ fn main() {
         data = stored_album.ok().unwrap();
         album = album::Album::load(&data).ok().unwrap();
     }
-    command.execute(&mut album)
+
+    cli::Cli::execute(&mut album);
 }

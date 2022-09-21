@@ -9,7 +9,7 @@ use super::sticker::Sticker;
 
 #[derive(Serialize, Deserialize)]
 pub struct NationalTeam<'a> {
-    team: Team,
+    pub team: Team,
 
     #[serde(borrow)]
     stickers: HashMap<&'a str, Sticker<'a>>,
@@ -917,13 +917,13 @@ impl NationalTeam<'_> {
         NationalTeam::new(Team::FWC, stk)
     }
 
-    pub fn collect<'a>(&mut self, id: &'a str) {
+    pub fn collect(&mut self, id: &str) {
         let mut sticker = *self.stickers.get_mut(id).unwrap();
         sticker.collect();
         *self.stickers.get_mut(id).unwrap() = sticker;
     }
 
-    pub fn trade<'a>(&mut self, id: &'a str) -> bool {
+    pub fn trade(&mut self, id: &str) -> bool {
         let mut sticker = *self.stickers.get_mut(id).unwrap();
         let res = sticker.trade();
         *self.stickers.get_mut(id).unwrap() = sticker;

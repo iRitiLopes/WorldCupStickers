@@ -83,3 +83,11 @@ impl Command for Clean {
         album.clean(self.team, self.repeated);
     }
 }
+
+pub struct Nations {}
+
+impl Command for Nations {
+    fn execute(&self, album: &mut Album) {
+        album.show_nations()
+    }
+}

@@ -19,9 +19,10 @@ pub struct Album<'a> {
 }
 
 impl<'a> Album<'_> {
-    pub fn new() -> Album<'static> {
+    pub fn new() -> Album<'a> {
         Album {
             teams: vec![
+                NationalTeam::fwc(),
                 NationalTeam::qatar(),
                 NationalTeam::ecuador(),
                 NationalTeam::senegal(),
@@ -54,12 +55,11 @@ impl<'a> Album<'_> {
                 NationalTeam::ghana(),
                 NationalTeam::uruguay(),
                 NationalTeam::korea(),
-                NationalTeam::fwc(),
             ],
         }
     }
 
-    pub fn collect(&mut self, team: Team, id: &'a str) {
+    pub fn collect(&mut self, team: Team, id: &str) {
         for national_team in &mut self.teams {
             if national_team.is(&team) {
                 national_team.collect(id)
@@ -68,7 +68,7 @@ impl<'a> Album<'_> {
         self.store();
     }
 
-    pub fn trade(&mut self, team: Team, id: &'a str) {
+    pub fn trade(&mut self, team: Team, id: &str) {
         for national_team in &mut self.teams {
             if national_team.is(&team) {
                 national_team.trade(id);
@@ -107,6 +107,14 @@ impl<'a> Album<'_> {
         }
     }
 
+    pub fn show_team(&self, team: Team, missing: bool, repeated: bool) {
+        for national_team in &self.teams {
+            if national_team.is(&team) {
+                national_team.show(missing, repeated)
+            }
+        }
+    }
+
     pub fn clean(&mut self, team: Result<Team, ()>, repeated: bool) {
         match team {
             Ok(t) => {
@@ -118,7 +126,7 @@ impl<'a> Album<'_> {
             }
             Err(_) => {
                 println!("Not found this National Team");
-                return
+                return;
             }
         }
         self.store();
@@ -129,6 +137,25 @@ impl<'a> Album<'_> {
             national_team.clean(repeated)
         }
         self.store()
+    }
+
+    pub fn show_nations(&self) {
+        match self.teams.get(0) {
+            Some(n) => print!("\n{}\n", n.team),
+            None => todo!(),
+        }
+        for i in 1..33 {
+            if (i % 4) == 1 {
+                print!("\nGROUP: {}\n", i / 4)
+            }
+            match self.teams.get(i) {
+                Some(n) => print!("{}\t", n.team),
+                None => todo!(),
+            }
+            if i % 4 == 0 {
+                print!("\n")
+            }
+        }
     }
 }
 
