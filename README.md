@@ -8,9 +8,11 @@ build:
 
 ```cargo build --bin stickers -r```
 
-add to path: 
+add to path
 
-```echo "export PATH=./target/release:\${PATH}" >> ~/.zshrc```
+```
+echo "export PATH=./target/release:\${PATH}" >> ~/.zshrc
+```
 
 
 ## Examples
