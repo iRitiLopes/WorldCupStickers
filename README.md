@@ -20,7 +20,7 @@ add to path:
 show all the stickers from BRAZIL
 
 ```bash
-stickers show bra --missing
+stickers show -n bra --missing
 ```
 show all the MISSING stickers from BRAZIL
 ```
@@ -69,7 +69,7 @@ Team(BRA)
 
 
 ```shell
-stickers show bra --repeated
+stickers show -n bra --repeated
 ```
 show all the REPEATED stickers from BRAZIL
 ```Team(BRA)
@@ -87,14 +87,14 @@ show all the REPEATED stickers from BRAZIL
 ### Collect
 
 ```bash
-stickers collect BRA 1 2 3 4 5 6 7 8 9 10 10 10 1 1 1
+stickers collect -n BRA -i 1,2,3,4,5,6,7,8,9,10,10,10,1,1,1
 ``` 
 collect all these stickers from BRAZIL: 1 2 3 4 5 6 7 8 9 10 10 10 1 1 1
 
 
 ### Trade
 ```
-stickers trade BRA 1 2 3 4 5 6 7 8 9 10 10 10 1 1 1
+stickers trade -n BRA -i 1,2,3,4,5,6,7,8,9,10,10,10,1,1,1
 ``` 
 
 trade all these stickers from BRAZIL: 1 2 3 4 5 6 7 8 9 10 10 10 1 1 1
@@ -104,7 +104,21 @@ If you try to trade a not repeated sticker:
 ```
 > stickers trade BRA 12
 Não foi possível trocar esta figurinha pois você não tem repetida: 12 Fabinho
-```              
+```
+
+
+### Clean
+```
+stickers clean -n BRA
+``` 
+
+clean all the repeated stickers from BRAZIL:
+- only remove if you have repeated stickers
+
+If you want to clean ALL the repeated
+```
+> stickers clean -a
+```
 
 ## TBD
 - export as csv or another type of export media
