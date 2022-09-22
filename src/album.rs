@@ -77,15 +77,6 @@ impl<'a> Album<'_> {
         self.store()
     }
 
-    pub fn get_national_team(&self, team: Team) -> Result<&NationalTeam, ()> {
-        for t in &self.teams {
-            if t.is(&team) {
-                return Ok(t);
-            }
-        }
-        Err(())
-    }
-
     fn store(&self) {
         let ser = serde_json::to_string(self).unwrap();
         fs::write(Self::path(), ser).expect("Unable to write file!");

@@ -1,7 +1,7 @@
 use crate::album::team::Team;
 use crate::cli::commands::Clean;
 use crate::cli::commands::Collect;
-
+use crate::cli::commands::Show;
 use crate::cli::commands::Trade;
 use core::str::FromStr;
 
@@ -28,16 +28,27 @@ impl Cli {
                 national_team,
                 repeated,
                 missing,
-                info
+                info,
             } => match national_team {
                 Some(nation) => {
                     let n = Team::from_str(nation);
-                    match n {
-                        Ok(n_team) => album.show_team(n_team, *missing, *repeated, *info),
-                        Err(_) => album.show(*missing, *repeated, *info),
-                    }
+                    let s = Show {
+                        team: n,
+                        repeated: *repeated,
+                        missing: *missing,
+                        info: *info,
+                    };
+                    s.execute(album)
                 }
-                None => album.show(*missing, *repeated, *info),
+                None => {
+                    let s = Show {
+                        team: Err(()),
+                        repeated: *repeated,
+                        missing: *missing,
+                        info: *info,
+                    };
+                    s.execute(album)
+                }
             },
             Commands::Collect { national_team, ids } => {
                 let n = Team::from_str(&national_team).unwrap();
@@ -97,7 +108,7 @@ enum Commands {
 
         ///Show complete info about your stickers
         #[clap(short, long, action, default_value_t = false)]
-        info: bool
+        info: bool,
     },
 
     /// Collect Stickers
@@ -105,7 +116,14 @@ enum Commands {
         #[clap(short, long, action)]
         national_team: String,
 
-        #[clap(short, long, action, value_parser, use_value_delimiter = true, value_delimiter=',')]
+        #[clap(
+            short,
+            long,
+            action,
+            value_parser,
+            use_value_delimiter = true,
+            value_delimiter = ','
+        )]
         ids: Vec<String>,
     },
 
@@ -114,7 +132,14 @@ enum Commands {
         #[clap(short, long, action)]
         national_team: String,
 
-        #[clap(short, long, action, value_parser, use_value_delimiter = true, value_delimiter=',')]
+        #[clap(
+            short,
+            long,
+            action,
+            value_parser,
+            use_value_delimiter = true,
+            value_delimiter = ','
+        )]
         ids: Vec<String>,
     },
 
