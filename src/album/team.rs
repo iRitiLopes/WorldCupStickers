@@ -215,6 +215,6 @@ impl Hash for Team {
 
 impl std::fmt::Display for Team {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::result::Result<(), std::fmt::Error> {
-        write!(f, "Team({:?})", self)
+        write!(f, "{:?}", self)
     }
 }

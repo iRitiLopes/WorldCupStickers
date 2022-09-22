@@ -28,15 +28,16 @@ impl Cli {
                 national_team,
                 repeated,
                 missing,
+                info
             } => match national_team {
                 Some(nation) => {
                     let n = Team::from_str(nation);
                     match n {
-                        Ok(n_team) => album.show_team(n_team, *missing, *repeated),
-                        Err(_) => album.show(*missing, *repeated),
+                        Ok(n_team) => album.show_team(n_team, *missing, *repeated, *info),
+                        Err(_) => album.show(*missing, *repeated, *info),
                     }
                 }
-                None => album.show(*missing, *repeated),
+                None => album.show(*missing, *repeated, *info),
             },
             Commands::Collect { national_team, ids } => {
                 let n = Team::from_str(&national_team).unwrap();
@@ -93,6 +94,10 @@ enum Commands {
 
         #[clap(short, long, action, default_value_t = false)]
         missing: bool,
+
+        ///Show complete info about your stickers
+        #[clap(short, long, action, default_value_t = false)]
+        info: bool
     },
 
     /// Collect Stickers

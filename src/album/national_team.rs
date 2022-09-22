@@ -1,11 +1,9 @@
-
-
 use std::{collections::HashMap, vec};
 
 use serde::{Deserialize, Serialize};
 
-use super::team::Team;
 use super::sticker::Sticker;
+use super::team::Team;
 
 #[derive(Serialize, Deserialize)]
 pub struct NationalTeam<'a> {
@@ -41,8 +39,6 @@ impl NationalTeam<'_> {
     pub fn is(&self, team: &Team) -> bool {
         return self.team == *team;
     }
-
-    
 
     pub fn qatar() -> NationalTeam<'static> {
         let stk = vec![
@@ -930,19 +926,28 @@ impl NationalTeam<'_> {
         return res;
     }
 
-    pub fn show(&self, missing: bool, repeated: bool) {
+    pub fn show(&self, missing: bool, repeated: bool, info: bool) {
         let mut message = format!("{}\n", self.team).to_owned();
         for (_sticker_id, sticker) in &self.stickers {
-            if (missing && sticker.is_missing()) || (repeated && sticker.have_repeated()) || (!missing && !repeated){
-                message.push_str(&format!("\t- {}\n", sticker));
+            if (missing && sticker.is_missing())
+                || (repeated && sticker.have_repeated())
+                || (!missing && !repeated)
+            {
+                if !info {
+                    message.push_str(&format!(
+                        "{}{}({}), ",
+                        self.team, sticker.id, sticker.quantity
+                    ));
+                } else {
+                    message.push_str(&format!("\t- {}\n", sticker));
+                }
             }
-                
         }
         println!("{}", message);
     }
 
     pub fn clean(&mut self, repeated: bool) {
-        for k in self.stickers.iter_mut(){
+        for k in self.stickers.iter_mut() {
             if k.1.have_repeated() && repeated {
                 k.1.clean();
             }

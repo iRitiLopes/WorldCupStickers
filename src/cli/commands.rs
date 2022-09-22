@@ -43,6 +43,7 @@ pub struct Show {
     pub team: Result<Team, ()>,
     pub missing: bool,
     pub repeated: bool,
+    pub info: bool
 }
 
 impl Command for Show {
@@ -51,11 +52,11 @@ impl Command for Show {
             Ok(team) => {
                 let n_team = album.get_national_team(team);
                 match n_team {
-                    Ok(n) => n.show(self.missing, self.repeated),
-                    Err(_) => album.show(self.missing, self.repeated),
+                    Ok(n) => n.show(self.missing, self.repeated, self.info),
+                    Err(_) => album.show(self.missing, self.repeated, self.info),
                 }
             }
-            Err(_) => album.show(self.missing, self.repeated),
+            Err(_) => album.show(self.missing, self.repeated, self.info),
         }
     }
 }

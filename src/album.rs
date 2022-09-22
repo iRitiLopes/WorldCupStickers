@@ -101,16 +101,17 @@ impl<'a> Album<'_> {
         format!("{}/.stickers.json", dir.to_str().unwrap()).to_owned()
     }
 
-    pub fn show(&self, missing: bool, repeated: bool) {
+    pub fn show(&self, missing: bool, repeated: bool, info: bool) {
         for national_team in &self.teams {
-            national_team.show(missing, repeated)
+            national_team.show(missing, repeated, info);
+            print!("\n");
         }
     }
 
-    pub fn show_team(&self, team: Team, missing: bool, repeated: bool) {
+    pub fn show_team(&self, team: Team, missing: bool, repeated: bool, info: bool) {
         for national_team in &self.teams {
             if national_team.is(&team) {
-                national_team.show(missing, repeated)
+                national_team.show(missing, repeated, info)
             }
         }
     }
