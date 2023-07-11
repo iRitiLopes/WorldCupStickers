@@ -109,9 +109,9 @@ impl<'a> Album<'_> {
 
     pub fn clean(&mut self, team: Result<Team, ()>, repeated: bool) {
         match team {
-            Ok(t) => {
+            Ok(team) => {
                 for national_team in self.teams.iter_mut() {
-                    if national_team.is(&t) {
+                    if national_team.is(&team) {
                         national_team.clean(repeated)
                     }
                 }
@@ -132,8 +132,9 @@ impl<'a> Album<'_> {
     }
 
     pub fn show_nations(&self) {
+        //print group stage
         match self.teams.get(0) {
-            Some(n) => print!("\n{}\n", n.team),
+            Some(team) => print!("\n{}\n", team.team),
             None => todo!(),
         }
         for i in 1..33 {
@@ -141,7 +142,7 @@ impl<'a> Album<'_> {
                 print!("\nGROUP: {}\n", (i / 4) + 1)
             }
             match self.teams.get(i) {
-                Some(n) => print!("{}\t", n.team),
+                Some(team) => print!("{}\t", team.team),
                 None => todo!(),
             }
             if i % 4 == 0 {
